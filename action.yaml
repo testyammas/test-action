@@ -1,0 +1,20 @@
+name: Build and push OCI image
+description: This action pushes an OCI image to ECR
+inputs:
+  dockerfile:
+    description: "Path to the Dockerfile to build"
+    required: false
+    default: ""
+  image-name:
+    description: "Name of the image"
+    required: false
+    default: ${{ github.event.repository.name }}
+
+runs:
+  using: composite
+  steps:
+    # Set image_name output for use in later steps: image-name input if provided, otherwise repository name
+    - name: Set image name 
+      id: image-name
+      shell: bash
+      run: echo "image_name=${{ inputs.image-name || github.event.repository.name }}" >> "$GITHUB_OUTPUT"
